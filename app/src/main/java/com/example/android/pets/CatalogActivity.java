@@ -193,7 +193,6 @@ public class CatalogActivity extends AppCompatActivity {
                 return true;
             // Respond to a click on the "Test Habit Tracker" menu option
             case R.id.action_test_habit_tracker:
-                Toast.makeText(CatalogActivity.this, "test habit tracker", Toast.LENGTH_SHORT).show();
                 habitTracker.insertHabit("walking the dog", false);
                 habitTracker.list();
                 return true;
