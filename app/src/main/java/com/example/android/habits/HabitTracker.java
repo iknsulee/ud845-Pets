@@ -1,9 +1,12 @@
 package com.example.android.habits;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.example.android.habits.data.HabitContract;
 
 public class HabitTracker {
 
@@ -11,8 +14,8 @@ public class HabitTracker {
 
     private final HabitDbHelper habitDbHelper;
 
-    public HabitTracker() {
-        habitDbHelper = new HabitDbHelper(null);
+    public HabitTracker(Context context) {
+        habitDbHelper = new HabitDbHelper(context);
     }
 
     public long insertHabit(String name, boolean complete) {
@@ -75,9 +78,8 @@ public class HabitTracker {
                 String currentName = cursor.getString(nameColumnIndex);
                 int currentComplete = cursor.getInt(completeColumnIndex);
 
-                Log.d(LOG_TAG, String.valueOf(currentID));
-                Log.d(LOG_TAG, currentName);
-                Log.d(LOG_TAG, String.valueOf(currentComplete));
+                Log.d(LOG_TAG, "id:" + String.valueOf(currentID) + ",name: " +
+                        currentName + ",complete: " + String.valueOf(currentComplete));
 
             }
 

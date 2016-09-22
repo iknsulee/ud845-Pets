@@ -1,4 +1,4 @@
-package com.example.android.habits;
+package com.example.android.habits.data;
 
 import android.provider.BaseColumns;
 

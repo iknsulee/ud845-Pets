@@ -27,7 +27,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.habits.HabitTracker;
 import com.example.android.pets.data.PetContract.PetEntry;
 
 /**
@@ -38,6 +40,7 @@ public class CatalogActivity extends AppCompatActivity {
     private static final String LOG_TAG = CatalogActivity.class.getSimpleName();
 
     private PetDbHelper mDbHelper;
+    private HabitTracker habitTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class CatalogActivity extends AppCompatActivity {
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         mDbHelper = new PetDbHelper(this);
+
+        habitTracker = new HabitTracker(this);
 
     }
 
@@ -185,6 +190,12 @@ public class CatalogActivity extends AppCompatActivity {
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
                 // Do nothing for now
+                return true;
+            // Respond to a click on the "Test Habit Tracker" menu option
+            case R.id.action_test_habit_tracker:
+                Toast.makeText(CatalogActivity.this, "test habit tracker", Toast.LENGTH_SHORT).show();
+                habitTracker.insertHabit("walking the dog", false);
+                habitTracker.list();
                 return true;
         }
         return super.onOptionsItemSelected(item);
