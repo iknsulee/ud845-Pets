@@ -7,9 +7,6 @@ import android.util.Log;
 
 import com.example.android.pets.data.PetContract.PetEntry;
 
-/**
- * Created by donbosco on 2016-09-22.
- */
 public class PetDbHelper extends SQLiteOpenHelper {
     public static final String LOG_TAG = PetDbHelper.class.getSimpleName();
 
