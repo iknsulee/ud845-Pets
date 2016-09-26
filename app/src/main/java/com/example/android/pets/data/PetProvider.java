@@ -132,6 +132,19 @@ public class PetProvider extends ContentProvider {
      */
     private Uri insertPet(Uri uri, ContentValues values) {
 
+        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+        String breed = values.getAsString(PetEntry.COLUMN_PET_BREED);
+        if (breed == null) {
+            throw new IllegalArgumentException("Pet requires a breed");
+        }
+        String weight = values.getAsString(PetEntry.COLUMN_PET_WEIGHT);
+        if (weight == null) {
+            throw new IllegalArgumentException("Pet requires a weight");
+        }
+
         // Get writeable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -153,8 +166,52 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        return 0;
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case PETS:
+                return updatePet(uri, contentValues, selection, selectionArgs);
+            case PET_ID:
+                // For the PET_ID code, extract out the ID from the URI,
+                // so we know which row to update. Selection will be "_id=?" and selection
+                // arguments will be a string array containing the actual ID.
+                selection = PetEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return updatePet(uri, contentValues, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Update is not supported for " + uri);
+        }
+
     }
+
+    /**
+     * Update pets in the database with the given content values. Apply the changes to the rows
+     * specified in the selection and selection arguments (which could be 0 or 1 or more pets.)
+     * Return the number of rows that were successfully updated.
+     *
+     */
+    private int updatePet(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+
+        String name = contentValues.getAsString(PetEntry.COLUMN_PET_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+        String breed = contentValues.getAsString(PetEntry.COLUMN_PET_BREED);
+        if (breed == null) {
+            throw new IllegalArgumentException("Pet requires a breed");
+        }
+        String weight = contentValues.getAsString(PetEntry.COLUMN_PET_WEIGHT);
+        if (weight == null) {
+            throw new IllegalArgumentException("Pet requires a weight");
+        }
+
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        return database.update(PetEntry.TABLE_NAME, contentValues, selection, selectionArgs);
+
+    }
+
 
     /**
      * Delete the data at the given selection and selection arguments.

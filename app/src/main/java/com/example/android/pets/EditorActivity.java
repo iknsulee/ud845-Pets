@@ -129,12 +129,6 @@ public class EditorActivity extends AppCompatActivity {
         String weightString = mWeightEditText.getText().toString().trim();
         int weight = Integer.parseInt(weightString);
 
-//        // Create database helper
-//        PetDbHelper petDbHelper = new PetDbHelper(this);
-//
-//        // Gets the database in write mode
-//        SQLiteDatabase db = petDbHelper.getWritableDatabase();
-
         // Create a ContentValues object where column names are the keys,
         // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
@@ -145,7 +139,6 @@ public class EditorActivity extends AppCompatActivity {
 
         // Insert a new row for pet in the database, returning the ID of that new row.
         Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
-//        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
 
         // Show a toast message depending on whether or not the insertion was successful
         if (newUri == null) {
