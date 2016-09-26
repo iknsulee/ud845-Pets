@@ -16,7 +16,6 @@
 package com.example.android.pets;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -32,38 +31,30 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.pets.data.PetContract.PetEntry;
-import com.example.android.pets.data.PetDbHelper;
 
 /**
  * Allows user to create a new pet or edit an existing one.
  */
 public class EditorActivity extends AppCompatActivity {
 
-    /**
-     * EditText field to enter the pet's name
-     */
+    /** EditText field to enter the pet's name */
     private EditText mNameEditText;
 
-    /**
-     * EditText field to enter the pet's breed
-     */
+    /** EditText field to enter the pet's breed */
     private EditText mBreedEditText;
 
-    /**
-     * EditText field to enter the pet's weight
-     */
+    /** EditText field to enter the pet's weight */
     private EditText mWeightEditText;
 
-    /**
-     * EditText field to enter the pet's gender
-     */
+    /** EditText field to enter the pet's gender */
     private Spinner mGenderSpinner;
 
     /**
-     * Gender of the pet. The possible values are:
-     * 0 for unknown gender, 1 for male, 2 for female.
+     * Gender of the pet. The possible valid values are in the PetContract.java file:
+     * {@link PetEntry#GENDER_UNKNOWN}, {@link PetEntry#GENDER_MALE}, or
+     * {@link PetEntry#GENDER_FEMALE}.
      */
-    private int mGender = 0;
+    private int mGender = PetEntry.GENDER_UNKNOWN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +128,7 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
         values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
 
-        // Insert a new row for pet in the database, returning the ID of that new row.
+        // Insert a new pet into the provider, returning the content URI for the new pet.
         Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
 
         // Show a toast message depending on whether or not the insertion was successful
