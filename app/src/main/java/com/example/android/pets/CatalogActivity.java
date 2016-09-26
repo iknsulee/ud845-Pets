@@ -16,6 +16,7 @@
 package com.example.android.pets;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -25,9 +26,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.android.pets.data.PetContract.PetEntry;
@@ -36,6 +39,11 @@ import com.example.android.pets.data.PetContract.PetEntry;
  * Displays list of pets that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    /**
+     * Tag for the log messages
+     */
+    public static final String LOG_TAG = CatalogActivity.class.getSimpleName();
 
     private static final int PET_LOADER = 0;
     PetCursorAdapter mCursorAdapter;
@@ -65,6 +73,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         mCursorAdapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
 
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(LOG_TAG, "position: " + position + ", id: " + id);
+
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+
+                Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
+                intent.setData(currentPetUri);
+
+                startActivity(intent);
+            }
+        });
+
         getLoaderManager().initLoader(PET_LOADER, null, this);
 
     }
@@ -88,6 +110,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
     }
 
+    /**
+     * Helper method to delete all pets in the database.
+     */
+    private void deleteAllPets() {
+        int rowsDeleted = getContentResolver().delete(PetEntry.CONTENT_URI, null, null);
+        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
@@ -106,7 +136,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                // Do nothing for now
+                deleteAllPets();
                 return true;
         }
         return super.onOptionsItemSelected(item);
